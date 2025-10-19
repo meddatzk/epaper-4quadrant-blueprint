@@ -4,6 +4,10 @@ blueprint:
     Zeigt vier Sensoren in einem 4-Quadranten-Layout auf einem E-Paper Display an.
     Alle Elemente sind konfigurierbar: Sensoren, Icons, Beschriftungen, Schwellenwerte und Farben.
   domain: automation
+  author: meddatzk
+  source_url: https://github.com/meddatzk/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
+  homeassistant:
+    min_version: 2023.8.0
   input:
     # E-Paper Display Einstellungen
     epaper_device:
