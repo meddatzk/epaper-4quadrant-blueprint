@@ -1,11 +1,10 @@
 blueprint:
-  name: E-Paper Display - 4-Quadranten-Layout
+  name: E-Paper Display - 4-Quadranten-Layout (v1.1.0)
   description: >
     Zeigt vier Sensoren in einem 4-Quadranten-Layout auf einem E-Paper Display an.
     Alle Elemente sind konfigurierbar: Sensoren, Icons, Beschriftungen, Schwellenwerte und Farben.
   domain: automation
   author: meddatzk
-  version: 1.1.0
   source_url: https://github.com/meddatzk/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
   homeassistant:
     min_version: 2023.8.0
@@ -203,24 +202,24 @@ blueprint:
     update_interval:
       name: Update-Intervall (nur bei zeitbasiert)
       description: Wie oft soll das Display bei zeitbasiertem Trigger aktualisiert werden?
-      default: 15
+      default: "15"
       selector:
         select:
           options:
             - label: Alle 5 Minuten
-              value: 5
+              value: "5"
             - label: Alle 10 Minuten
-              value: 10
+              value: "10"
             - label: Alle 15 Minuten
-              value: 15
+              value: "15"
             - label: Alle 30 Minuten
-              value: 30
+              value: "30"
             - label: Jede Stunde
-              value: 60
+              value: "60"
             - label: Alle 2 Stunden
-              value: 120
+              value: "120"
             - label: Alle 6 Stunden
-              value: 360
+              value: "360"
 
 variables:
   sensor_1_entity: !input sensor_1
