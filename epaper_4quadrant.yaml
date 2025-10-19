@@ -1,0 +1,317 @@
+blueprint:
+  name: E-Paper Display - 4-Quadranten-Layout
+  description: >
+    Zeigt vier Sensoren in einem 4-Quadranten-Layout auf einem E-Paper Display an.
+    Alle Elemente sind konfigurierbar: Sensoren, Icons, Beschriftungen, Schwellenwerte und Farben.
+  domain: automation
+  input:
+    # E-Paper Display Einstellungen
+    epaper_device:
+      name: E-Paper Display
+      description: Das Ziel E-Paper Display Gerät
+      selector:
+        device:
+          integration: open_epaper_link
+    
+    display_title:
+      name: Display Titel
+      description: Überschrift des Displays
+      default: "Sensor Übersicht"
+      selector:
+        text:
+    
+    ttl:
+      name: Time to Live (TTL)
+      description: Wie lange die Anzeige gültig bleiben soll (in Sekunden)
+      default: 600
+      selector:
+        number:
+          min: 60
+          max: 3600
+          step: 60
+          unit_of_measurement: "s"
+    
+    # Sensor 1 - Oben Links
+    sensor_1:
+      name: Sensor 1 (Oben Links)
+      description: Erster Sensor (oben links)
+      selector:
+        entity:
+          domain: sensor
+    
+    sensor_1_label:
+      name: Beschriftung Sensor 1
+      description: Anzeigename für Sensor 1
+      default: "Sensor 1"
+      selector:
+        text:
+    
+    sensor_1_icon:
+      name: Icon Sensor 1
+      description: MDI Icon für Sensor 1 (z.B. mdi:sprout)
+      default: "mdi:sprout"
+      selector:
+        icon:
+    
+    # Sensor 2 - Oben Rechts
+    sensor_2:
+      name: Sensor 2 (Oben Rechts)
+      description: Zweiter Sensor (oben rechts)
+      selector:
+        entity:
+          domain: sensor
+    
+    sensor_2_label:
+      name: Beschriftung Sensor 2
+      description: Anzeigename für Sensor 2
+      default: "Sensor 2"
+      selector:
+        text:
+    
+    sensor_2_icon:
+      name: Icon Sensor 2
+      description: MDI Icon für Sensor 2
+      default: "mdi:sprout"
+      selector:
+        icon:
+    
+    # Sensor 3 - Unten Links
+    sensor_3:
+      name: Sensor 3 (Unten Links)
+      description: Dritter Sensor (unten links)
+      selector:
+        entity:
+          domain: sensor
+    
+    sensor_3_label:
+      name: Beschriftung Sensor 3
+      description: Anzeigename für Sensor 3
+      default: "Sensor 3"
+      selector:
+        text:
+    
+    sensor_3_icon:
+      name: Icon Sensor 3
+      description: MDI Icon für Sensor 3
+      default: "mdi:sprout"
+      selector:
+        icon:
+    
+    # Sensor 4 - Unten Rechts
+    sensor_4:
+      name: Sensor 4 (Unten Rechts)
+      description: Vierter Sensor (unten rechts)
+      selector:
+        entity:
+          domain: sensor
+    
+    sensor_4_label:
+      name: Beschriftung Sensor 4
+      description: Anzeigename für Sensor 4
+      default: "Sensor 4"
+      selector:
+        text:
+    
+    sensor_4_icon:
+      name: Icon Sensor 4
+      description: MDI Icon für Sensor 4
+      default: "mdi:sprout"
+      selector:
+        icon:
+    
+    # Schwellenwert und Einheit
+    threshold_low:
+      name: Unterer Schwellenwert
+      description: Wert, unter dem die Anzeige rot wird
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+    
+    unit:
+      name: Einheit
+      description: Anzuzeigende Einheit (z.B. %, °C, lx)
+      default: "%"
+      selector:
+        text:
+    
+    # Farben
+    normal_color:
+      name: Normale Farbe
+      description: Farbe für normale Werte
+      default: "black"
+      selector:
+        select:
+          options:
+            - label: Schwarz
+              value: "black"
+            - label: Rot
+              value: "red"
+            - label: Weiß
+              value: "white"
+    
+    alert_color:
+      name: Alarm Farbe
+      description: Farbe für Werte unter dem Schwellenwert
+      default: "red"
+      selector:
+        select:
+          options:
+            - label: Rot
+              value: "red"
+            - label: Schwarz
+              value: "black"
+            - label: Weiß
+              value: "white"
+    
+    divider_color:
+      name: Trennlinien Farbe
+      description: Farbe der Trennlinien
+      default: "red"
+      selector:
+        select:
+          options:
+            - label: Rot
+              value: "red"
+            - label: Schwarz
+              value: "black"
+            - label: Weiß
+              value: "white"
+
+triggers:
+  - trigger: state
+    entity_id: !input sensor_1
+  - trigger: state
+    entity_id: !input sensor_2
+  - trigger: state
+    entity_id: !input sensor_3
+  - trigger: state
+    entity_id: !input sensor_4
+
+conditions: []
+
+actions:
+  - action: open_epaper_link.drawcustom
+    metadata: {}
+    data:
+      rotate: 0
+      dither: "0"
+      dry-run: false
+      background: white
+      ttl: !input ttl
+      payload:
+        # Titel
+        - type: text
+          value: !input display_title
+          x: 43
+          "y": 5
+          size: 14
+          color: !input normal_color
+        
+        # Trennlinien
+        - type: line
+          x_start: 148
+          y_start: 20
+          x_end: 148
+          y_end: 142
+          color: !input divider_color
+        - type: line
+          x_start: 10
+          y_start: 76
+          x_end: 286
+          y_end: 76
+          color: !input divider_color
+        
+        # Quadrant 1: Oben Links
+        - type: icon
+          value: !input sensor_1_icon
+          x: 5
+          "y": 20
+          size: 45
+          color: >-
+            {% if states(!input sensor_1) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        - type: text
+          value: !input sensor_1_label
+          x: 50
+          "y": 30
+          size: 13
+          color: !input normal_color
+        - type: text
+          value: "{{ states(!input sensor_1) | int }} {{ !input unit }}"
+          x: 50
+          "y": 50
+          size: 15
+          color: >-
+            {% if states(!input sensor_1) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        
+        # Quadrant 2: Oben Rechts
+        - type: icon
+          value: !input sensor_2_icon
+          x: 155
+          "y": 20
+          size: 45
+          color: >-
+            {% if states(!input sensor_2) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        - type: text
+          value: !input sensor_2_label
+          x: 200
+          "y": 30
+          size: 13
+          color: !input normal_color
+        - type: text
+          value: "{{ states(!input sensor_2) | int }} {{ !input unit }}"
+          x: 200
+          "y": 50
+          size: 15
+          color: >-
+            {% if states(!input sensor_2) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        
+        # Quadrant 3: Unten Links
+        - type: icon
+          value: !input sensor_3_icon
+          x: 5
+          "y": 85
+          size: 45
+          color: >-
+            {% if states(!input sensor_3) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        - type: text
+          value: !input sensor_3_label
+          x: 50
+          "y": 95
+          size: 13
+          color: !input normal_color
+        - type: text
+          value: "{{ states(!input sensor_3) | int }} {{ !input unit }}"
+          x: 50
+          "y": 115
+          size: 15
+          color: >-
+            {% if states(!input sensor_3) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        
+        # Quadrant 4: Unten Rechts
+        - type: icon
+          value: !input sensor_4_icon
+          x: 155
+          "y": 85
+          size: 45
+          color: >-
+            {% if states(!input sensor_4) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+        - type: text
+          value: !input sensor_4_label
+          x: 200
+          "y": 95
+          size: 13
+          color: !input normal_color
+        - type: text
+          value: "{{ states(!input sensor_4) | int }} {{ !input unit }}"
+          x: 200
+          "y": 115
+          size: 15
+          color: >-
+            {% if states(!input sensor_4) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+    target:
+      device_id: !input epaper_device
+
+mode: single
