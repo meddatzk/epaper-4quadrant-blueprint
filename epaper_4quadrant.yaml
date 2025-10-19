@@ -4,8 +4,9 @@ blueprint:
     Zeigt vier Sensoren in einem 4-Quadranten-Layout auf einem E-Paper Display an.
     Alle Elemente sind konfigurierbar: Sensoren, Icons, Beschriftungen, Schwellenwerte und Farben.
   domain: automation
-  author: DEIN-GITHUB-USERNAME
-  source_url: https://github.com/DEIN-USERNAME/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
+  author: meddatzk
+  version: 1.1.0
+  source_url: https://github.com/meddatzk/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
   homeassistant:
     min_version: 2023.8.0
   input:
@@ -183,6 +184,43 @@ blueprint:
               value: "black"
             - label: Weiß
               value: "white"
+    
+    # Trigger Einstellungen
+    trigger_mode:
+      name: Trigger-Modus
+      description: Wann soll das Display aktualisiert werden?
+      default: "sensor"
+      selector:
+        select:
+          options:
+            - label: Bei Sensor-Änderung
+              value: "sensor"
+            - label: Zeitbasiert (regelmäßig)
+              value: "time"
+            - label: Beides (Sensor + Zeit)
+              value: "both"
+    
+    update_interval:
+      name: Update-Intervall (nur bei zeitbasiert)
+      description: Wie oft soll das Display bei zeitbasiertem Trigger aktualisiert werden?
+      default: 15
+      selector:
+        select:
+          options:
+            - label: Alle 5 Minuten
+              value: 5
+            - label: Alle 10 Minuten
+              value: 10
+            - label: Alle 15 Minuten
+              value: 15
+            - label: Alle 30 Minuten
+              value: 30
+            - label: Jede Stunde
+              value: 60
+            - label: Alle 2 Stunden
+              value: 120
+            - label: Alle 6 Stunden
+              value: 360
 
 variables:
   sensor_1_entity: !input sensor_1
@@ -193,18 +231,60 @@ variables:
   normal_col: !input normal_color
   alert_col: !input alert_color
   unit_text: !input unit
+  trigger_mode_var: !input trigger_mode
+  interval_minutes: !input update_interval
 
 triggers:
+  # Sensor-basierte Trigger
   - trigger: state
     entity_id: !input sensor_1
+    id: sensor_trigger
   - trigger: state
     entity_id: !input sensor_2
+    id: sensor_trigger
   - trigger: state
     entity_id: !input sensor_3
+    id: sensor_trigger
   - trigger: state
     entity_id: !input sensor_4
+    id: sensor_trigger
+  # Zeitbasierte Trigger für verschiedene Intervalle
+  - trigger: time_pattern
+    minutes: "/5"
+    id: time_trigger_5
+  - trigger: time_pattern
+    minutes: "/10"
+    id: time_trigger_10
+  - trigger: time_pattern
+    minutes: "/15"
+    id: time_trigger_15
+  - trigger: time_pattern
+    minutes: "/30"
+    id: time_trigger_30
+  - trigger: time_pattern
+    hours: "/1"
+    id: time_trigger_60
+  - trigger: time_pattern
+    hours: "/2"
+    id: time_trigger_120
+  - trigger: time_pattern
+    hours: "/6"
+    id: time_trigger_360
 
-conditions: []
+conditions:
+  - condition: template
+    value_template: >
+      {% set mode = trigger_mode_var %}
+      {% set interval = interval_minutes | int %}
+      {% set trigger_id = trigger.id %}
+      
+      {% if mode == 'sensor' %}
+        {{ trigger_id == 'sensor_trigger' }}
+      {% elif mode == 'time' %}
+        {{ trigger_id == 'time_trigger_' ~ interval }}
+      {% else %}
+        {{ trigger_id == 'sensor_trigger' or trigger_id == 'time_trigger_' ~ interval }}
+      {% endif %}
 
 actions:
   - action: open_epaper_link.drawcustom
