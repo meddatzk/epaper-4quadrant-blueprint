@@ -12,6 +12,9 @@ Ein flexibler Home Assistant Blueprint zur Anzeige von vier Sensoren in einem ü
 
 Klicke auf den Button oben, um den Blueprint direkt in deine Home Assistant Instanz zu importieren!
 
+<img width="152" height="296" alt="image" src="https://github.com/user-attachments/assets/09db896d-9faa-4752-8fc3-b7f79c02bf2c" />
+
+
 ## 📋 Voraussetzungen
 
 - Home Assistant (Core 2023.8 oder neuer empfohlen)
