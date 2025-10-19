@@ -8,7 +8,7 @@ Ein flexibler Home Assistant Blueprint zur Anzeige von vier Sensoren in einem ü
 
 ## 🚀 Quick Start
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FDEIN-USERNAME%2Fepaper-4quadrant-blueprint%2Fblob%2Fmain%2Fepaper_4quadrant.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fmeddatzk%2Fepaper-4quadrant-blueprint%2Fblob%2Fmain%2Fepaper_4quadrant.yaml)
 
 Klicke auf den Button oben, um den Blueprint direkt in deine Home Assistant Instanz zu importieren!
 
