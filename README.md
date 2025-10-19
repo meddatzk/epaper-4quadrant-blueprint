@@ -125,6 +125,12 @@ Contributions sind willkommen! Bitte erstelle einen Pull Request oder öffne ein
 
 ## 📝 Changelog
 
+### Version 1.1.0 (2025-10-19)
+
+ - NEU: Flexible Trigger-Modi (Sensor-basiert, zeitbasiert, oder beides)
+ - NEU: Konfigurierbare Update-Intervalle (5-360 Minuten)
+ - Verbesserte Dokumentation mit zusätzlichen Beispielen
+
 ### Version 1.0.0 (2025-10-19)
 - Initiales Release
 - Vollständig konfigurierbares 4-Quadranten-Layout
