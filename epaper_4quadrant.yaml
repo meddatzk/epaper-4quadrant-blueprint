@@ -4,8 +4,8 @@ blueprint:
     Zeigt vier Sensoren in einem 4-Quadranten-Layout auf einem E-Paper Display an.
     Alle Elemente sind konfigurierbar: Sensoren, Icons, Beschriftungen, Schwellenwerte und Farben.
   domain: automation
-  author: meddatzk
-  source_url: https://github.com/meddatzk/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
+  author: DEIN-GITHUB-USERNAME
+  source_url: https://github.com/DEIN-USERNAME/epaper-4quadrant-blueprint/blob/main/epaper_4quadrant.yaml
   homeassistant:
     min_version: 2023.8.0
   input:
@@ -184,6 +184,16 @@ blueprint:
             - label: Weiß
               value: "white"
 
+variables:
+  sensor_1_entity: !input sensor_1
+  sensor_2_entity: !input sensor_2
+  sensor_3_entity: !input sensor_3
+  sensor_4_entity: !input sensor_4
+  threshold: !input threshold_low
+  normal_col: !input normal_color
+  alert_col: !input alert_color
+  unit_text: !input unit
+
 triggers:
   - trigger: state
     entity_id: !input sensor_1
@@ -235,7 +245,7 @@ actions:
           "y": 20
           size: 45
           color: >-
-            {% if states(!input sensor_1) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_1_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         - type: text
           value: !input sensor_1_label
           x: 50
@@ -243,12 +253,12 @@ actions:
           size: 13
           color: !input normal_color
         - type: text
-          value: "{{ states(!input sensor_1) | int }} {{ !input unit }}"
+          value: "{{ states(sensor_1_entity) | int }} {{ unit_text }}"
           x: 50
           "y": 50
           size: 15
           color: >-
-            {% if states(!input sensor_1) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_1_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         
         # Quadrant 2: Oben Rechts
         - type: icon
@@ -257,7 +267,7 @@ actions:
           "y": 20
           size: 45
           color: >-
-            {% if states(!input sensor_2) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_2_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         - type: text
           value: !input sensor_2_label
           x: 200
@@ -265,12 +275,12 @@ actions:
           size: 13
           color: !input normal_color
         - type: text
-          value: "{{ states(!input sensor_2) | int }} {{ !input unit }}"
+          value: "{{ states(sensor_2_entity) | int }} {{ unit_text }}"
           x: 200
           "y": 50
           size: 15
           color: >-
-            {% if states(!input sensor_2) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_2_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         
         # Quadrant 3: Unten Links
         - type: icon
@@ -279,7 +289,7 @@ actions:
           "y": 85
           size: 45
           color: >-
-            {% if states(!input sensor_3) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_3_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         - type: text
           value: !input sensor_3_label
           x: 50
@@ -287,12 +297,12 @@ actions:
           size: 13
           color: !input normal_color
         - type: text
-          value: "{{ states(!input sensor_3) | int }} {{ !input unit }}"
+          value: "{{ states(sensor_3_entity) | int }} {{ unit_text }}"
           x: 50
           "y": 115
           size: 15
           color: >-
-            {% if states(!input sensor_3) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_3_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         
         # Quadrant 4: Unten Rechts
         - type: icon
@@ -301,7 +311,7 @@ actions:
           "y": 85
           size: 45
           color: >-
-            {% if states(!input sensor_4) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_4_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
         - type: text
           value: !input sensor_4_label
           x: 200
@@ -309,12 +319,12 @@ actions:
           size: 13
           color: !input normal_color
         - type: text
-          value: "{{ states(!input sensor_4) | int }} {{ !input unit }}"
+          value: "{{ states(sensor_4_entity) | int }} {{ unit_text }}"
           x: 200
           "y": 115
           size: 15
           color: >-
-            {% if states(!input sensor_4) | float(0) < !input threshold_low %}{{ !input alert_color }}{% else %}{{ !input normal_color }}{% endif %}
+            {% if states(sensor_4_entity) | float(0) < threshold %}{{ alert_col }}{% else %}{{ normal_col }}{% endif %}
     target:
       device_id: !input epaper_device
 
